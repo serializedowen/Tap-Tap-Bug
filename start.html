@@ -1,0 +1,43 @@
+<DOCTYPE html>
+
+<head>
+<script src="events.js"></script>
+
+<style>
+body {
+	text-align: center;
+}
+h1 {
+	color: red;
+	font-size: 50px;
+	border-width: 2px;
+	border-style: dotted;
+	display: inline;
+	padding: 10px;
+	border-color: blue;
+}
+#select {
+	font-weight: bold;
+	font-size: 24px;
+}
+</style>
+</head>
+
+<body>
+<br>
+<br>
+<br>
+<h1> Tap Tap Bug</h1>
+
+<form name="level" action="game.html" onsubmit="return checkLevel()" method="post">
+	<br>
+	<div id="select">
+		Level: 
+		<input type="radio" name="level" id="level1">1</input>
+		<input type="radio" name="level" id="level2">2</input>
+	</div>
+	<input type="submit" id="startbutton" value="Start!"></button>
+<form>
+
+<p>High Score:<p>
+</body>
