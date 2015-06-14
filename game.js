@@ -1,20 +1,29 @@
 var WIDTH = 400;
 var HEIGHT = 600;
 var canvas = document.getElementById("myCanvas");
+var canvas2 = document.getElementById("clock");
 var context = canvas.getContext('2d');
+var context2 = canvas2.getContext('2d');
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
 var food = 3;
 var entires = [];
 var foods = [];
+var clock = 60;
+var counter = 0;
+var score = 0;
+context2.font="20px Georgia";
 
 function click(event){
 	event = event || window.event;
 	var x = event.pageX,
-	y = event.pageY;
-	for(var i = 0; i < entires.length; i++){
-		if(entires[i].boxPosX+100 >= x && entires[i].boxPosX-100 <= x && entires[i].boxPosY+100 >= y && entires[i].boxPosY-100 <= y){
+	y = event.pageY,
+	lists = [];
+	lists = entires
+	for(var i = 0; i < lists.length; i++){
+		if(lists[i].boxPosX+100 >= x && lists[i].boxPosX-100 <= x && lists[i].boxPosY+100 >= y && lists[i].boxPosY-100 <= y){
 			entires.splice(i,1);
+			score++;
 		}
 	}
 }
@@ -27,30 +36,40 @@ function loop() {
 }
 function start() {
 	loop();
-	canvas.addEventListener("mousedown", click, false);
+	canvas.addEventListener('click', click, false);
 	for(var i = 0; i <= food; i++){
 		foods.push(makeFood(i*100,i*100));
 	}
 }
-function sprite(options){
-	var that = {};
+//function sprite(options){
+//	var that = {};
+//
+//	that.context = options.context;
+//	that.width = options.width;
+//	that.height = options.height;
+//	that.image = options.image;
+//
+//	return that;
+//}
 
-	that.context = options.context;
-	that.width = options.width;
-	that.height = options.height;
-	that.image = options.image;
-
-	return that;
-}
 function draw(){
-	context.fillStyle = "#FF0000";
+	context.fillStyle = "white";
 	context.fillRect(0,0,WIDTH,HEIGHT);
+	context2.clearRect(0,0,canvas2.width, canvas2.height);
+	context2.fillText(clock, 10,50);
+	context2.fillText(score, 300,50);
 	for(var x = 0; x < entires.length; x++){
 		entires[x].draw(context);
 	}
 	for(var x = 0; x < foods.length; x++){
 		foods[x].draw(context);
 	}
+	if (counter == 60){
+		clock--;
+		counter = 0;
+	}
+	counter ++;
+
 }
 function update(){
 	for(var x = 0; x < entires.length; x++){
@@ -63,7 +82,7 @@ function mainLoop(){
 	requestAnimationFrame(mainLoop);
 }
 function spawnBug(){
-	entires.push(makeBug((Math.random()*100)*10,10));
+	entires.push(makeBug((Math.random()*400),10));
 }
 
 function makeFood(x,y){
@@ -73,7 +92,7 @@ function makeFood(x,y){
 	function draw(context){
 		context.save();	
 		context.translate(foodPosX,foodPosY);
-		context.fillStyle = 'white';
+		context.fillStyle = 'black';
 		context.fillRect(-3,-1,6,2);
 		context.restore();
 	}
@@ -87,19 +106,21 @@ function makeFood(x,y){
 function makeBug(x,y){
 	var boxPosX = x,
 	boxPosY = y,
-	speed = 2,
+	speed = 0.5,
 	tx = (9999 - boxPosX),
 	ty = (9999 - boxPosY),
 	direction = 0,
 	turnSpeed = (2*Math.PI) / 50,
-	total =  Math.sqrt(tx * tx + ty * ty);
+	total =  Math.sqrt(tx * tx + ty * ty),
+	drawing = new Image();
+	drawing.src = "bug3.png";
 
 	function draw(context){
 		context.save();	
 		context.translate(boxPosX,boxPosY);
 		context.rotate(direction);
 		context.fillStyle = 'black';
-		context.fillRect(-3,-1,6,2);
+		context.drawImage(drawing,0,0);
 		context.restore();
 	}
 	function update(){
@@ -127,8 +148,8 @@ function makeBug(x,y){
 			direction += (direction2 * Math.min(turnSpeed, abs));
 		}
 		direction %= 2*Math.PI;
-		boxPosX += Math.cos(direction) * speed;
-		boxPosY += Math.sin(direction) * speed;
+		boxPosX += Math.cos(angle) * speed;
+		boxPosY += Math.sin(angle) * speed;
 		tx = (9999 - boxPosX),
 		ty = (9999 - boxPosY),
 		total =  Math.sqrt(tx * tx + ty * ty);
