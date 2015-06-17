@@ -6,6 +6,7 @@ var timeLeft = 60;
 var score = 0;
 var requestID;
 var paused = false;
+var gameEnded = false;
 var clickX;
 var clickY;
 var background = new Image();
@@ -14,44 +15,65 @@ var foods = new Image();
 foods.src = "foods.png";
 
 
-
-
 // Known Issues:
 
 	//1. change of lineWidth changes the width of shape of bugs as well.
-	//2. Gameover function not implemented.
+	//2. Gameover function not implemented. RESOLVED
 	//3. Pausing the game doesn't stop the bug spawning loop.
-	//4. speed differene from level not implemented.
+	//4. speed differene from level not implemented.   RESOLVED
 
 
-
-	
 window.addEventListener("mousedown", doMouseDown, false);
 
 function gameOver(){
+	var canvas = document.getElementById("gameBoard");
+	var ctx = canvas.getContext("2d");
+	gameEnded = true;
+
 	cancelAnimationFrame(mainLoop);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = "red";
+	ctx.strokeStyle = "black";
+	ctx.fillText("GameOver", 160, 300);
+	ctx.fillText("Your Score is: " + score, 145, 320);
+	ctx.strokeRect(100, 350, 50, 30);
+	ctx.strokeRect(250, 350, 50, 30);
+	ctx.fillStyle = "black";
+	ctx.fillText("Replay", 100, 370);
+	ctx.fillText("Exit", 260, 370);
 }
+
 
 function doMouseDown(event){
 	clickX = event.pageX - document.getElementById("gameBoard").offsetLeft;
 	clickY = event.pageY - document.getElementById("gameBoard").offsetTop;
 
+	if (gameEnded == false){
+		console.log(clickX + " " + clickY + paused);
+		if ((215 > clickX) && (185 < clickX) && (scoreBoardHeight/2 + 15 > clickY) && (clickY > scoreBoardHeight/2 - 15)){
+			paused = !paused;
+			var canvas = document.getElementById("gameBoard");
+			var ctx = canvas.getContext("2d");
 
-	console.log(clickX + " " + clickY + paused);
-	if ((215 > clickX) && (185 < clickX) && (scoreBoardHeight/2 + 15 > clickY) && (clickY > scoreBoardHeight/2 - 15)){
-		paused = !paused;
-		var canvas = document.getElementById("gameBoard");
-		var ctx = canvas.getContext("2d");
+			ctx.clearRect(0, 0, 400, scoreBoardHeight);
+			drawScoreBoard(ctx);
 
-		ctx.clearRect(0, 0, 400, scoreBoardHeight);
-		drawScoreBoard(ctx);
-
-		if (paused){
-			cancelAnimationFrame(requestID);
-		} else{
-			requestID = requestAnimationFrame(mainLoop);
+			if (paused){
+				cancelAnimationFrame(requestID);
+			} else{
+				requestID = requestAnimationFrame(mainLoop);
+			}
 		}
+	} else{
 
+		//Clicking Replay Button.
+		if ((clickX > 100) && (clickX < 150) && (clickY > 350) && (clickY < 380)){
+			location.reload();
+
+		//Clicking Exit Button.
+		} else if ((clickX > 250) && (clickX < 300) && (clickY > 350) && (clickY < 380)){
+			window.close();
+		}
 		
 	}
 }
@@ -60,10 +82,16 @@ function init() {
 	var canvas = document.getElementById("gameBoard");
 	var ctx = canvas.getContext("2d");
 	
+
+	index = window.location.href.lastIndexOf("=");
+
 	for (var i = 0; i < numOfFood; i++){
 		foodArray.push(makeNewFood(ctx));
 	}
 
+	//alert("level" + window.location.href.substr(index + 1, 1));
+
+	level = window.location.href.substr(index + 1, 1);
 	bugDrawingLoop();
 	requestID = requestAnimationFrame(mainLoop);
 }
@@ -315,8 +343,15 @@ function makeNewBug(ctx){
 
 	//return true or false, indicating whether the bug is killed.
 	function update(elapsed){
-		//speed difference from level not implemented.
-		var distance = info.type.speed1 * elapsed;
+		var speed;
+
+		if (level == 1){
+			speed = info.type.speed1;
+		} else{
+			speed = info.type.speed2;
+		}
+
+		var distance = speed * elapsed;
 		//console.log("distance" + info.type.speed1);
 
 		if ((clickX > info.x - 30) && (clickX < info.x + 30) && (clickY > info.y - 30) && (clickY < info.y + 30)){
