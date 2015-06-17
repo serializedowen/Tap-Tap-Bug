@@ -1,6 +1,11 @@
 var foodArray = [];
 var bugArray = [];
+var drawing = new Image();
+drawing.src = "grass.png";
+var foods = new Image();
+foods.src = "foods.png";
 var numOfFood = 5;
+
 
 
 function init() {
@@ -20,6 +25,7 @@ function mainLoop(){
 	var canvas = document.getElementById("gameBoard");
 	ctx = canvas.getContext("2d");
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.drawImage(drawing,0,0);
 	console.log("a");
 	for (var i = 0; i < foodArray.length; i++){
 		foodArray[i].draw(ctx);
@@ -30,7 +36,6 @@ function mainLoop(){
 		bugArray[i].draw(ctx);
 		bugArray[i].update(1000/60);
 	}
-
 	requestAnimationFrame(mainLoop);
 
 }
