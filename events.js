@@ -8,6 +8,10 @@ var requestID;
 var paused = false;
 var clickX;
 var clickY;
+var background = new Image();
+background.src = "grass.png";
+var foods = new Image();
+foods.src = "foods.png";
 
 
 
@@ -66,7 +70,7 @@ function init() {
 
 function drawScoreBoard(ctx){
 
-	//ctx.save();
+	ctx.save();
 	ctx.strokeStyle = "black";
 	ctx.fillStyle = "black";
 	ctx.linewidth = 1;
@@ -94,9 +98,9 @@ function drawScoreBoard(ctx){
 		ctx.restore();
 
 	} else{
-		//ctx.save();
+		ctx.save();
 		ctx.strokeStyle = "black";
-		ctx.lineWidth = 6;
+		ctx.lineWidth = 1;
 		ctx.moveTo(193, scoreBoardHeight/2 - 11);
 		ctx.lineTo(193, scoreBoardHeight/2 + 11);
 		ctx.moveTo(207, scoreBoardHeight/2 - 11);
@@ -112,7 +116,7 @@ function mainLoop(){
 	var canvas = document.getElementById("gameBoard");
 	ctx = canvas.getContext("2d");
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	drawScoreBoard(ctx);
+	ctx.drawImage(background,0,40);
 
 	var bugsToRemove = [];
 	for (var i = 0; i < foodArray.length; i++){
@@ -145,7 +149,7 @@ function mainLoop(){
 		timeLeft = 0;
 		gameOver();
 	} 
-	
+	drawScoreBoard(ctx);
 	requestID = requestAnimationFrame(mainLoop);
 
 }
@@ -190,6 +194,8 @@ var orangeBug = {
 
 function makeNewFood(ctx){
 	var valid = false;
+	var pictureX = 5 + (Math.floor(Math.random() * 5) * 25);
+	var pictureY = 10 + (Math.floor(Math.random() * 2) * 20);
 
 	//making sure food is not too close to each other.
 	while(valid == false){
@@ -205,10 +211,10 @@ function makeNewFood(ctx){
 	}
 
 	//console.log("x: " + x + "y: " + y);
-
+	console.log(pictureX);
 	function draw(ctx){
 		var food = document.getElementById("food");
-		ctx.drawImage(food, x - 10, y - 10, 20, 20);
+		ctx.drawImage(foods, pictureX, pictureY, 20, 20,x,y,20,20);
 	}
 
 	function update(elapsed){
@@ -238,7 +244,6 @@ function makeNewBug(ctx){
 		target: undefined
 	};
 
-	console.log(info.type.score);
 	function findTargetFood(){
 		var distance = Math.pow(400, 2) + Math.pow(600, 2);
 		var index;
@@ -274,8 +279,7 @@ function makeNewBug(ctx){
 		var xtail = info.x - 15 * Math.cos(info.target.angle);
 		var ytail = info.y - 15 * Math.sin(info.target.angle);
 
-		//ctx.save();
-		ctx.lineWidth = 1;
+		ctx.save();
 		ctx.beginPath();
 		ctx.arc(xhead, yhead, 5, 0, 2 * Math.PI);
 		ctx.fillStyle = info.type.color;
@@ -283,7 +287,7 @@ function makeNewBug(ctx){
 		ctx.strokeStyle = "black";
 		ctx.stroke();
 		ctx.closePath();
-		//ctx.restore();
+		ctx.restore();
 
 		//console.log(xhead + " " + yhead + " " + xtail + " " + ytail);
 
@@ -297,10 +301,10 @@ function makeNewBug(ctx){
 		ctx.fill();
 		ctx.restore(); // restore to original state
 
-		//ctx.save();
+		ctx.save();
 		ctx.strokeStyle = "black";
 		ctx.stroke();
-		//ctx.restore();
+		ctx.restore();
 		ctx.closePath();
 	}
 
