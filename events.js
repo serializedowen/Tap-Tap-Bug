@@ -13,6 +13,12 @@ var background = new Image();
 background.src = "grass.png";
 var foods = new Image();
 foods.src = "foods.png";
+var blackBugs = new Image();
+var redBugs = new Image();
+var OrangeBugs = new Image();
+blackBugs.src = "blackbug.png";
+redBugs.src = "redbug.png";
+OrangeBugs.src = "OrangeBug.png";
 
 
 // Known Issues:
@@ -300,42 +306,68 @@ function makeNewBug(ctx){
 
 	info.target = findTargetFood();
 
-	function draw(ctx){
+	//function draw(ctx){
+	//	if(info.type.color == "black"){
+	//		ctx.drawImage(blackBug,info.x,info.y);
+			//ctx.rotate(info.target.angle);
+	//	}
+	//	else if(info.type.color == "red"){
+	//		ctx.drawImage(redBug,info.x,info.y);
+			//ctx.rotate(info.target.angle);
+	//	}
+	//	else if(info.type.color == "orange"){
+	//		ctx.drawImage(OrangeBug,info.x,info.y);
+			//ctx.rotate(info.target.angle);
+	//	}
+		//var xhead = info.x + 5 * Math.cos(info.target.angle);
+		//var yhead = info.y + 5 * Math.sin(info.target.angle);
+		//var xtail = info.x - 15 * Math.cos(info.target.angle);
+		//var ytail = info.y - 15 * Math.sin(info.target.angle);
 
-		var xhead = info.x + 5 * Math.cos(info.target.angle);
-		var yhead = info.y + 5 * Math.sin(info.target.angle);
-		var xtail = info.x - 15 * Math.cos(info.target.angle);
-		var ytail = info.y - 15 * Math.sin(info.target.angle);
-
-		ctx.save();
-		ctx.beginPath();
-		ctx.arc(xhead, yhead, 5, 0, 2 * Math.PI);
-		ctx.fillStyle = info.type.color;
-		ctx.fill();
-		ctx.strokeStyle = "black";
-		ctx.stroke();
-		ctx.closePath();
-		ctx.restore();
+		//ctx.save();
+		//ctx.beginPath();
+		//ctx.arc(xhead, yhead, 5, 0, 2 * Math.PI);
+		//ctx.fillStyle = info.type.color;
+		//ctx.fill();
+		//ctx.strokeStyle = "black";
+		//ctx.stroke();
+		//ctx.closePath();
+		//ctx.restore();
 
 		//console.log(xhead + " " + yhead + " " + xtail + " " + ytail);
 
-		ctx.save(); // save state
-		ctx.beginPath();
-		ctx.translate(xtail, ytail);
-		ctx.rotate(info.target.angle);
-		ctx.scale(15, 5);
-		ctx.arc(0, 0, 1, 0, 2 * Math.PI, false);
-		ctx.fillStyle = info.type.color;
-		ctx.fill();
-		ctx.restore(); // restore to original state
+		//ctx.save(); // save state
+		//ctx.beginPath();
+		//ctx.translate(xtail, ytail);
+		//ctx.rotate(info.target.angle);
+		//ctx.scale(15, 5);
+		//ctx.arc(0, 0, 1, 0, 2 * Math.PI, false);
+		//ctx.fillStyle = info.type.color;
+		//ctx.fill();
+		//ctx.restore(); // restore to original state
 
-		ctx.save();
-		ctx.strokeStyle = "black";
-		ctx.stroke();
-		ctx.restore();
-		ctx.closePath();
+		//ctx.save();
+		//ctx.strokeStyle = "black";
+		//ctx.stroke();
+		//ctx.restore();
+		//ctx.closePath();
+	//}
+	function draw(context){
+		context.save();	
+		context.translate(info.x,info.y);
+		context.rotate(info.target.angle);
+		context.fillStyle = 'black';
+		if(info.type.color == "black"){
+			context.drawImage(blackBugs,0,0);
+		}
+		else if(info.type.color == "orange"){
+			context.drawImage(OrangeBugs,0,0);
+		}
+		else{
+			context.drawImage(redBugs,0,0);
+		}
+		context.restore();
 	}
-
 	function evaluate(){
 		return (info.x > info.target.x - 10) && (info.x < info.target.x + 10) && (info.y > info.target.y - 10) && (info.y < info.target.y + 10);
 	}
