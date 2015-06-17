@@ -2,20 +2,30 @@
 
 <head>
 <script>
-	function checkLevel()
-	{
-		var radio = document.getElementsByName("level");
-		for (var i = 0; i < radio.length; i++){
-			if (radio[i].checked){
-				return true;
-			}
-		}
-		alert("you must select a level to continue.");
-		return false;
-	}
-</script>
+var level;
 
+
+function checkLevel()
+{
+	var radio = document.getElementsByName("level");
+	for (var i = 0; i < radio.length; i++){
+		if (radio[i].checked){
+			level = radio[i].value;
+			return true;
+		}
+	}
+	alert("you must select a level to continue.");
+	return false;
+}
+
+
+function redirectPage(){
+	window.location="game.html" + "?" + "level=" + level;
+}
+
+</script>
 <style>
+
 body {
 	text-align: center;
 }
@@ -32,7 +42,9 @@ h1 {
 	font-weight: bold;
 	font-size: 24px;
 }
+
 </style>
+
 </head>
 
 <body>
@@ -41,7 +53,7 @@ h1 {
 <br>
 <h1> Tap Tap Bug</h1>
 
-<form name="levelform" action="game.html" onsubmit="return checkLevel()" method="post">
+<form name="levelform" action="javascript:redirectPage()" onsubmit="return checkLevel()" method="post">
 	<br>
 	<div id="select">
 		Level: 
@@ -51,5 +63,5 @@ h1 {
 	<input type="submit" id="startbutton" value="Start!"></input>
 </form>
 
-<p>High Score:<p>
+<highScore>High Score:</highScore>
 </body>
