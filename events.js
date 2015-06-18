@@ -5,6 +5,7 @@ var scoreBoardHeight = 40;
 var timeLeft = 60;
 var score = 0;
 var requestID;
+var spawnID;
 var paused = false;
 var gameEnded = false;
 var clickX;
@@ -23,10 +24,11 @@ OrangeBugs.src = "OrangeBug.png";
 
 // Known Issues:
 
-	//1. change of lineWidth changes the width of shape of bugs as well.
+	//1. change of lineWidth changes the width of shape of bugs as well.  
 	//2. Gameover function not implemented. RESOLVED
 	//3. Pausing the game doesn't stop the bug spawning loop.
 	//4. speed differene from level not implemented.   RESOLVED
+	//5. Bugs wont fade out when killed RESOLVED
 
 
 window.addEventListener("mousedown", doMouseDown, false);
@@ -40,6 +42,7 @@ function gameOver(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = "red";
 	ctx.strokeStyle = "black";
+	ctx.font='bold 15px Arial';
 	ctx.fillText("GameOver", 160, 300);
 	ctx.fillText("Your Score is: " + score, 145, 320);
 	ctx.strokeRect(100, 350, 50, 30);
@@ -54,6 +57,8 @@ function doMouseDown(event){
 	clickX = event.pageX - document.getElementById("gameBoard").offsetLeft;
 	clickY = event.pageY - document.getElementById("gameBoard").offsetTop;
 
+
+	// Controls for game screen
 	if (gameEnded == false){
 		console.log(clickX + " " + clickY + paused);
 		if ((215 > clickX) && (185 < clickX) && (scoreBoardHeight/2 + 15 > clickY) && (clickY > scoreBoardHeight/2 - 15)){
@@ -70,6 +75,8 @@ function doMouseDown(event){
 				requestID = requestAnimationFrame(mainLoop);
 			}
 		}
+
+	// Controls for game over screen.
 	} else{
 
 		//Clicking Replay Button.
@@ -78,7 +85,7 @@ function doMouseDown(event){
 
 		//Clicking Exit Button.
 		} else if ((clickX > 250) && (clickX < 300) && (clickY > 350) && (clickY < 380)){
-			window.close();
+			window.location="start.html";
 		}
 		
 	}
@@ -102,7 +109,16 @@ function init() {
 	requestID = requestAnimationFrame(mainLoop);
 }
 
+function unfinished(){
+	if (paused){
+		clearTimeOut(spawnID);
+	} else{
+
+	}
+}
+
 function drawScoreBoard(ctx){
+	ctx.clearRect(0, 0, 400, scoreBoardHeight);
 
 	ctx.save();
 	ctx.strokeStyle = "black";
@@ -119,7 +135,7 @@ function drawScoreBoard(ctx){
 	ctx.restore();
 
 	if (paused){
-		//ctx.save();
+		ctx.save();
 		ctx.strokeStyle = "black";
 		ctx.fillStyle = "black";
 	
@@ -141,7 +157,6 @@ function drawScoreBoard(ctx){
 		ctx.lineTo(207, scoreBoardHeight/2 + 11);
 		ctx.stroke();
 		ctx.restore();
-
 
 	}
 }
@@ -191,8 +206,7 @@ function mainLoop(){
 function bugDrawingLoop(){
 	var rand = Math.random() * (2000) + 1000;    //1-3 seconds
 
-		setTimeout(function (){
-
+		spawnID = setTimeout(function (){
 			bugArray.push(makeNewBug(ctx));
 			bugDrawingLoop();
 		}, rand);
@@ -200,7 +214,7 @@ function bugDrawingLoop(){
 
 
 var blackBug = {
-	color: "black",
+	color: "rgba(0, 0, 0, ",
 	speed1: 0.15,
 	speed2: 0.2,
 	score: 5,
@@ -208,7 +222,7 @@ var blackBug = {
 };
 
 var redBug = {
-	color: "red",
+	color: "rgba(255, 0, 0, ",
 	speed1: 0.075,
 	speed2: 0.1,
 	score: 3,
@@ -216,7 +230,7 @@ var redBug = {
 };
 
 var orangeBug = {
-	color: "orange",
+	color: "rgba(255, 102, 0, ",
 	speed1: 0.06,
 	speed2: 0.08,
 	score: 1,
@@ -274,7 +288,7 @@ function makeNewBug(ctx){
 		x: 10 + Math.random() * 380,
 		y: 30 + scoreBoardHeight,
 		type: type,
-		transparency: 100,
+		transparency: 1,
 		target: undefined
 	};
 
@@ -284,6 +298,7 @@ function makeNewBug(ctx){
 
 		if (foodArray.length == 0){
 			gameOver();
+			return;
 		} else{
 
 		//find which food to run for. 
@@ -306,68 +321,60 @@ function makeNewBug(ctx){
 
 	info.target = findTargetFood();
 
-	//function draw(ctx){
-	//	if(info.type.color == "black"){
-	//		ctx.drawImage(blackBug,info.x,info.y);
-			//ctx.rotate(info.target.angle);
-	//	}
-	//	else if(info.type.color == "red"){
-	//		ctx.drawImage(redBug,info.x,info.y);
-			//ctx.rotate(info.target.angle);
-	//	}
-	//	else if(info.type.color == "orange"){
-	//		ctx.drawImage(OrangeBug,info.x,info.y);
-			//ctx.rotate(info.target.angle);
-	//	}
-		//var xhead = info.x + 5 * Math.cos(info.target.angle);
-		//var yhead = info.y + 5 * Math.sin(info.target.angle);
-		//var xtail = info.x - 15 * Math.cos(info.target.angle);
-		//var ytail = info.y - 15 * Math.sin(info.target.angle);
+	function parseFillStyle(){
+		return info.type.color + info.transparency + ")";
+	}
 
-		//ctx.save();
-		//ctx.beginPath();
-		//ctx.arc(xhead, yhead, 5, 0, 2 * Math.PI);
-		//ctx.fillStyle = info.type.color;
-		//ctx.fill();
-		//ctx.strokeStyle = "black";
-		//ctx.stroke();
-		//ctx.closePath();
-		//ctx.restore();
+	function draw(ctx){
+		var xhead = info.x + 5 * Math.cos(info.target.angle);
+		var yhead = info.y + 5 * Math.sin(info.target.angle);
+		var xtail = info.x - 15 * Math.cos(info.target.angle);
+		var ytail = info.y - 15 * Math.sin(info.target.angle);
+
+		ctx.save();
+		ctx.beginPath();
+		ctx.arc(xhead, yhead, 5, 0, 2 * Math.PI);
+		console.log(parseFillStyle());
+		ctx.fillStyle = parseFillStyle();
+		ctx.fill();
+		ctx.strokeStyle = "black";
+		ctx.stroke();
+		ctx.restore();
 
 		//console.log(xhead + " " + yhead + " " + xtail + " " + ytail);
 
-		//ctx.save(); // save state
-		//ctx.beginPath();
-		//ctx.translate(xtail, ytail);
-		//ctx.rotate(info.target.angle);
-		//ctx.scale(15, 5);
-		//ctx.arc(0, 0, 1, 0, 2 * Math.PI, false);
-		//ctx.fillStyle = info.type.color;
-		//ctx.fill();
-		//ctx.restore(); // restore to original state
+		ctx.save(); // save state
+		ctx.beginPath();
+		ctx.translate(xtail, ytail);
+		ctx.rotate(info.target.angle);
+		ctx.scale(15, 5);
+		ctx.arc(0, 0, 1, 0, 2 * Math.PI, false);
+		ctx.fillStyle = parseFillStyle();
+		ctx.fill();
+		ctx.restore(); // restore to original state
 
-		//ctx.save();
-		//ctx.strokeStyle = "black";
-		//ctx.stroke();
-		//ctx.restore();
-		//ctx.closePath();
-	//}
-	function draw(context){
-		context.save();	
-		context.translate(info.x,info.y);
-		context.rotate(info.target.angle);
-		context.fillStyle = 'black';
-		if(info.type.color == "black"){
-			context.drawImage(blackBugs,0,0);
-		}
-		else if(info.type.color == "orange"){
-			context.drawImage(OrangeBugs,0,0);
-		}
-		else{
-			context.drawImage(redBugs,0,0);
-		}
-		context.restore();
+		ctx.save();
+		ctx.strokeStyle = "black";
+		ctx.stroke();
+		ctx.restore();
+		
 	}
+	//function draw(context){
+	//	context.save();	
+	//	context.translate(info.x,info.y);
+	//	context.rotate(info.target.angle);
+	//	context.fillStyle = 'black';
+	//	if(info.type.color == "black"){
+	//		context.drawImage(blackBugs,0,0);
+	//	}
+	//	else if(info.type.color == "orange"){
+	//		context.drawImage(OrangeBugs,0,0);
+	//	}
+	//	else{
+	//		context.drawImage(redBugs,0,0);
+	//	}
+	//	context.restore();
+	//}
 	function evaluate(){
 		return (info.x > info.target.x - 10) && (info.x < info.target.x + 10) && (info.y > info.target.y - 10) && (info.y < info.target.y + 10);
 	}
@@ -375,32 +382,39 @@ function makeNewBug(ctx){
 
 	//return true or false, indicating whether the bug is killed.
 	function update(elapsed){
-		var speed;
 
-		if (level == 1){
-			speed = info.type.speed1;
+		// If the bug is already fading
+		if (info.transparency < 1){
+			info.transparency -= 1/120;	
+			return info.transparency >= 0;
 		} else{
-			speed = info.type.speed2;
+			var speed;
+			if (level == 1){
+				speed = info.type.speed1;
+			} else{
+				speed = info.type.speed2;
+			}
+
+			var distance = speed * elapsed;
+			
+			// If bug is clicked.
+			if ((clickX > info.x - 30) && (clickX < info.x + 30) && (clickY > info.y - 30) && (clickY < info.y + 30)){
+				info.transparency -= 1/120;
+				return true;
+			}
+
+			info.target = findTargetFood();
+
+			info.x += distance * Math.cos(info.target.angle);
+			info.y += distance * Math.sin(info.target.angle);
+
+			//if we are touching the food.
+			if (evaluate()){
+				foodArray.splice(info.target.index, 1);
+			} 
+
+			return true;
 		}
-
-		var distance = speed * elapsed;
-		//console.log("distance" + info.type.speed1);
-
-		if ((clickX > info.x - 30) && (clickX < info.x + 30) && (clickY > info.y - 30) && (clickY < info.y + 30)){
-			return false;
-		}
-
-		info.target = findTargetFood();
-
-		info.x += distance * Math.cos(info.target.angle);
-		info.y += distance * Math.sin(info.target.angle);
-
-		//if we are touching the food.
-		if (evaluate()){
-			foodArray.splice(info.target.index, 1);
-		} 
-
-		return true;
 	}
 
 	return {draw: draw, update: update, info:info};
