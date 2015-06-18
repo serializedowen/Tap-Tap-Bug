@@ -14,12 +14,16 @@ var background = new Image();
 background.src = "grass.png";
 var foods = new Image();
 foods.src = "foods.png";
-var blackBugs = new Image();
-var redBugs = new Image();
-var OrangeBugs = new Image();
-blackBugs.src = "blackbug.png";
-redBugs.src = "redbug.png";
-OrangeBugs.src = "OrangeBug.png";
+//var blackBugs = new Image();
+//var redBugs = new Image();
+//var OrangeBugs = new Image();
+//blackBugs.src = "blackbug.png";
+//redBugs.src = "redbug.png";
+//OrangeBugs.src = "OrangeBug.png";
+var redX = new Image();
+redX.src = "red_X.png";
+var bloodSplat = new Image();
+bloodSplat.src = "blood-splat-icon.png";
 
 
 // Known Issues:
@@ -326,6 +330,11 @@ function makeNewBug(ctx){
 	}
 
 	function draw(ctx){
+		if(info.transparency < 1){
+			ctx.save();
+			ctx.drawImage(bloodSplat,info.x-15,info.y -25);
+			ctx.restore();
+		}
 		var xhead = info.x + 5 * Math.cos(info.target.angle);
 		var yhead = info.y + 5 * Math.sin(info.target.angle);
 		var xtail = info.x - 15 * Math.cos(info.target.angle);
@@ -357,6 +366,14 @@ function makeNewBug(ctx){
 		ctx.strokeStyle = "black";
 		ctx.stroke();
 		ctx.restore();
+
+		if(info.transparency < 1){
+			ctx.save();
+			ctx.globalAlpha = info.transparency;
+			ctx.drawImage(redX,info.x-15,info.y -15);
+			ctx.restore();
+		}
+
 		
 	}
 	//function draw(context){
