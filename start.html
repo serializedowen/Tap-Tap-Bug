@@ -45,6 +45,10 @@ function redirectPage(){
 
 <highScore id="highscore">High Score:</highScore>
 <script>
-	document.write(localStorage.getItem("highscore"));
+	if (localStorage.getItem("highscore") == null){
+		document.write("0");
+	} else{
+		document.write(localStorage.getItem("highscore"));
+	}
 </script>
 </body>

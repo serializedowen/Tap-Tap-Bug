@@ -10,6 +10,7 @@ var paused = false;
 var gameEnded = false;
 var clickX;
 var clickY;
+var pauseDelay = 100;
 var background = new Image();
 background.src = "grass.png";
 var foods = new Image();
@@ -43,8 +44,12 @@ function gameOver(){
 	var canvas = document.getElementById("gameBoard");
 	var ctx = canvas.getContext("2d");
 	gameEnded = true;
+	paused = true;
+	
 
+	clearTimeout(spawnID);
 	cancelAnimationFrame(mainLoop);
+
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = "red";
 	ctx.strokeStyle = "black";
@@ -59,13 +64,14 @@ function gameOver(){
 	if(localStorage.getItem("highscore") == null || localStorage.getItem("highscore") < score){
 		localStorage.setItem("highscore",score);
 	}
+
+
 }
 
 
 function doMouseDown(event){
 	clickX = event.pageX - document.getElementById("gameBoard").offsetLeft;
 	clickY = event.pageY - document.getElementById("gameBoard").offsetTop;
-
 
 	// Controls for game screen
 	if (gameEnded == false){
@@ -123,8 +129,6 @@ function init() {
 }
 
 function switchStateSpawningLoop(){
-
-	console.log("aaaaaa");
 	if (paused){
 		clearTimeout(spawnID);
 	} else{
@@ -182,6 +186,13 @@ function mainLoop(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.drawImage(background,0,40);
 
+
+	if (foodArray.length == 0){
+		gameOver();
+		return;
+	}
+
+
 	var bugsToRemove = [];
 	for (var i = 0; i < foodArray.length; i++){
 		foodArray[i].draw(ctx);
@@ -203,7 +214,6 @@ function mainLoop(){
 	clickY = 0;
 
 	for (var i = bugsToRemove.length - 1; i >= 0; i--){
-		score += bugArray[bugsToRemove[i]].info.type.score;
 		bugArray.splice(bugsToRemove[i], 1);
 	}	
 
@@ -212,6 +222,7 @@ function mainLoop(){
 	if (timeLeft < 0){
 		timeLeft = 0;
 		gameOver();
+		return;
 	} 
 	drawScoreBoard(ctx);
 	requestID = requestAnimationFrame(mainLoop);
@@ -432,6 +443,7 @@ function makeNewBug(ctx){
 			// If bug is clicked.
 			if ((clickX > info.x - 30) && (clickX < info.x + 30) && (clickY > info.y - 30) && (clickY < info.y + 30)){
 				info.transparency -= 1/120;
+				score += info.type.score;
 				return true;
 			}
 
