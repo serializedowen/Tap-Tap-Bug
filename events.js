@@ -15,6 +15,7 @@ background.src = "grass.png";
 var foods = new Image();
 foods.src = "foods.png";
 var splat = new Audio("Splatsound.wav");
+var backgroundMusic = new Audio("Spring_In_My_Step_-_Silent_Partner.wav");
 //var blackBugs = new Image();
 //var redBugs = new Image();
 //var OrangeBugs = new Image();
@@ -100,6 +101,7 @@ function doMouseDown(event){
 }
 
 function init() {
+	backgroundMusic.play();
 	var canvas = document.getElementById("gameBoard");
 	var ctx = canvas.getContext("2d");
 	
