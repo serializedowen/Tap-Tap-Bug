@@ -56,7 +56,7 @@ function gameOver(){
 	ctx.fillStyle = "black";
 	ctx.fillText("Replay", 100, 370);
 	ctx.fillText("Exit", 260, 370);
-	if(localStorage.getItem("highscore") != null && localStorage.getItem("highscore") < score){
+	if(localStorage.getItem("highscore") == null || localStorage.getItem("highscore") < score){
 		localStorage.setItem("highscore",score);
 	}
 }
