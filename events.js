@@ -14,6 +14,7 @@ var background = new Image();
 background.src = "grass.png";
 var foods = new Image();
 foods.src = "foods.png";
+var splat = new Audio("Splatsound.wav");
 //var blackBugs = new Image();
 //var redBugs = new Image();
 //var OrangeBugs = new Image();
@@ -283,7 +284,7 @@ function makeNewFood(ctx){
 
 function makeNewBug(ctx){
 	var type = Math.random();
-
+	var flag = 0;
 	if (type < 0.3){
 		type = blackBug;
 	} else if (type < 0.6){
@@ -336,6 +337,10 @@ function makeNewBug(ctx){
 
 	function draw(ctx){
 		if(info.transparency < 1){
+			if (flag == 0){
+				splat.play();
+				flag = 1;
+			}
 			ctx.save();
 			ctx.drawImage(bloodSplat,info.x-15,info.y -25);
 			ctx.restore();
