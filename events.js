@@ -64,10 +64,7 @@ function gameOver(){
 	if(localStorage.getItem("highscore") == null || localStorage.getItem("highscore") < score){
 		localStorage.setItem("highscore",score);
 	}
-
-
 }
-
 
 function doMouseDown(event){
 	clickX = event.pageX - document.getElementById("gameBoard").offsetLeft;
@@ -75,13 +72,12 @@ function doMouseDown(event){
 
 	// Controls for game screen
 	if (gameEnded == false){
-		console.log(clickX + " " + clickY + paused);
+		//console.log(clickX + " " + clickY + paused);
 		if ((215 > clickX) && (185 < clickX) && (scoreBoardHeight/2 + 15 > clickY) && (clickY > scoreBoardHeight/2 - 15)){
 			paused = !paused;
 			var canvas = document.getElementById("gameBoard");
 			var ctx = canvas.getContext("2d");
 
-			ctx.clearRect(0, 0, 400, scoreBoardHeight);
 			drawScoreBoard(ctx);
 
 			//Pause & Unpause the spawning loop.
@@ -114,13 +110,11 @@ function init() {
 	var canvas = document.getElementById("gameBoard");
 	var ctx = canvas.getContext("2d");
 	
-
 	index = window.location.href.lastIndexOf("=");
 
 	for (var i = 0; i < numOfFood; i++){
 		foodArray.push(makeNewFood(ctx));
 	}
-
 	//alert("level" + window.location.href.substr(index + 1, 1));
 
 	level = window.location.href.substr(index + 1, 1);
@@ -142,9 +136,10 @@ function drawScoreBoard(ctx){
 	ctx.save();
 	ctx.strokeStyle = "black";
 	ctx.fillStyle = "black";
-	ctx.linewidth = 1;
+	ctx.beginPath();
 	ctx.moveTo(0, scoreBoardHeight);
 	ctx.lineTo(400, scoreBoardHeight);
+	ctx.closePath();
 	ctx.stroke();
 	ctx.font='bold 15px Arial';
 	ctx.fillText("Time Left: " + Math.round(timeLeft * 10) / 10 + " sec", 10, scoreBoardHeight / 2 + 5);
@@ -154,26 +149,32 @@ function drawScoreBoard(ctx){
 	ctx.restore();
 
 	if (paused){
+		console.log("here");
 		ctx.save();
 		ctx.strokeStyle = "black";
 		ctx.fillStyle = "black";
 	
+		ctx.beginPath();
 		ctx.moveTo(189, scoreBoardHeight/2 - 11);
 		ctx.lineTo(211, scoreBoardHeight/2);
 		ctx.lineTo(189, scoreBoardHeight/2 + 11);
-		ctx.lineTo(189, scoreBoardHeight/2 - 11)
+		ctx.lineTo(189, scoreBoardHeight/2 - 11);
+		ctx.closePath();
 		ctx.stroke();
 		ctx.fill();
 		ctx.restore();
 
 	} else{
+		console.log("alsohere");
 		ctx.save();
 		ctx.strokeStyle = "black";
-		ctx.lineWidth = 1;
+		ctx.lineWidth = 6;
+		ctx.beginPath();
 		ctx.moveTo(193, scoreBoardHeight/2 - 11);
 		ctx.lineTo(193, scoreBoardHeight/2 + 11);
 		ctx.moveTo(207, scoreBoardHeight/2 - 11);
 		ctx.lineTo(207, scoreBoardHeight/2 + 11);
+		ctx.closePath();
 		ctx.stroke();
 		ctx.restore();
 
@@ -285,7 +286,7 @@ function makeNewFood(ctx){
 	}
 
 	//console.log("x: " + x + "y: " + y);
-	console.log(pictureX);
+	//console.log(pictureX);
 	function draw(ctx){
 		var food = document.getElementById("food");
 		ctx.drawImage(foods, pictureX, pictureY, 20, 20,x,y,20,20);
@@ -369,6 +370,7 @@ function makeNewBug(ctx){
 		ctx.save();
 		ctx.beginPath();
 		ctx.arc(xhead, yhead, 5, 0, 2 * Math.PI);
+		ctx.closePath();
 		//console.log(parseFillStyle());
 		ctx.fillStyle = parseFillStyle();
 		ctx.fill();
@@ -384,6 +386,7 @@ function makeNewBug(ctx){
 		ctx.rotate(info.target.angle);
 		ctx.scale(15, 5);
 		ctx.arc(0, 0, 1, 0, 2 * Math.PI, false);
+		ctx.closePath();
 		ctx.fillStyle = parseFillStyle();
 		ctx.fill();
 		ctx.restore(); // restore to original state
