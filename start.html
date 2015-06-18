@@ -1,9 +1,9 @@
 <DOCTYPE html>
 
 <head>
+<link href="style.css" type="text/css" rel="stylesheet" />
 <script>
 var level;
-
 
 function checkLevel()
 {
@@ -24,26 +24,6 @@ function redirectPage(){
 }
 
 </script>
-<style>
-
-body {
-	text-align: center;
-}
-h1 {
-	color: red;
-	font-size: 50px;
-	border-width: 2px;
-	border-style: dotted;
-	display: inline;
-	padding: 10px;
-	border-color: blue;
-}
-#select {
-	font-weight: bold;
-	font-size: 24px;
-}
-
-</style>
 
 </head>
 
@@ -63,5 +43,5 @@ h1 {
 	<input type="submit" id="startbutton" value="Start!"></input>
 </form>
 
-<highScore>High Score:</highScore>
+<highScore id="highscore">High Score:</highScore>
 </body>
