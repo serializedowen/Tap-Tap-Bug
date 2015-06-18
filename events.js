@@ -26,7 +26,7 @@ OrangeBugs.src = "OrangeBug.png";
 
 	//1. change of lineWidth changes the width of shape of bugs as well.  
 	//2. Gameover function not implemented. RESOLVED
-	//3. Pausing the game doesn't stop the bug spawning loop.
+	//3. Pausing the game doesn't stop the bug spawning loop.   RESOLVED
 	//4. speed differene from level not implemented.   RESOLVED
 	//5. Bugs wont fade out when killed RESOLVED
 
@@ -69,6 +69,9 @@ function doMouseDown(event){
 			ctx.clearRect(0, 0, 400, scoreBoardHeight);
 			drawScoreBoard(ctx);
 
+			//Pause & Unpause the spawning loop.
+			switchStateSpawningLoop();
+
 			if (paused){
 				cancelAnimationFrame(requestID);
 			} else{
@@ -109,11 +112,13 @@ function init() {
 	requestID = requestAnimationFrame(mainLoop);
 }
 
-function unfinished(){
-	if (paused){
-		clearTimeOut(spawnID);
-	} else{
+function switchStateSpawningLoop(){
 
+	console.log("aaaaaa");
+	if (paused){
+		clearTimeout(spawnID);
+	} else{
+		bugDrawingLoop();
 	}
 }
 
@@ -334,7 +339,7 @@ function makeNewBug(ctx){
 		ctx.save();
 		ctx.beginPath();
 		ctx.arc(xhead, yhead, 5, 0, 2 * Math.PI);
-		console.log(parseFillStyle());
+		//console.log(parseFillStyle());
 		ctx.fillStyle = parseFillStyle();
 		ctx.fill();
 		ctx.strokeStyle = "black";
