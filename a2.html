@@ -3,6 +3,38 @@
 <head>
 <script type="text/javascript "src= "events.js"></script>
 <link href="style.css" type="text/css" rel="stylesheet" />
+
+<script>
+var level;
+
+function checkLevel()
+{
+	var radio = document.getElementsByName("level");
+	for (var i = 0; i < radio.length; i++){
+		if (radio[i].checked){
+			level = radio[i].value;
+			return true;
+		}
+	}
+	alert("you must select a level to continue.");
+	return false;
+}
+
+
+function redirectPage(){
+	init(level);
+}
+
+function hiding(){
+		document.getElementById("hid").style.visibility = 'hidden';
+		document.getElementById("canvas").style.visibility = 'visible';
+}
+function rehid(){
+	document.getElementById("hid").style.visibility = 'visible';
+	document.getElementById("canvas").style.visibility = 'hidden';
+}
+</script>
+
 </head>
 <div id="hid">
 <body onload="writeHighScore()">

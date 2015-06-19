@@ -137,11 +137,11 @@ function doMouseDown(event){
 
 		//Clicking Replay Button.
 		if ((clickX > 100) && (clickX < 150) && (clickY > 350) && (clickY < 380)){
-			location.reload();
-			init(level);
+			restart();
+
 		//Clicking Exit Button.
 		} else if ((clickX > 250) && (clickX < 300) && (clickY > 350) && (clickY < 380)){
-			location.reload();
+			rehid();
 		}
 		
 	}
@@ -170,6 +170,19 @@ function init(levels) {
 	level = levels;
 	bugDrawingLoop();
 	requestID = requestAnimationFrame(mainLoop);
+}
+
+function restart(){
+	var canvas = document.getElementById("gameBoard");
+	var ctx = canvas.getContext("2d");
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	foodArray = [];
+	bugArray = [];
+	timeLeft = 60;
+	score = 0;
+	paused = false;
+	gameEnded = false;
+	init(level);
 }
 
 function switchStateSpawningLoop(){
