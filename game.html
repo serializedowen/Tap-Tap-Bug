@@ -1,16 +1,63 @@
 <DOCTYPE html>
-<head>
 
+<head>
+<script type="text/javascript "src= "events.js"></script>
+<link href="style.css" type="text/css" rel="stylesheet" />
+<script>
+var level;
+
+function checkLevel()
+{
+	var radio = document.getElementsByName("level");
+	for (var i = 0; i < radio.length; i++){
+		if (radio[i].checked){
+			level = radio[i].value;
+			return true;
+		}
+	}
+	alert("you must select a level to continue.");
+	return false;
+}
+
+
+function redirectPage(){
+	init(level);
+}
+
+function hiding(){
+		document.getElementById("hid").style.visibility = 'hidden';
+		document.getElementById("canvas").style.visibility = 'visible';
+}
+</script>
 
 </head>
-
+<div id="hid">
 <body>
-	
-	<canvas id="gameBoard" width="400px" height="640px" style="border:1px solid black"></canvas>
-	<img id="food" src="food.jpg" style="display:none"/>
-	<script src="events.js" type="text/javascript"></script>
-	<script>
+<br>
+<br>
+<br>
+<h1> Tap Tap Bug</h1>
 
-	init();
-	</script>
+<form name="levelform" action="javascript:redirectPage()" onsubmit="return checkLevel()" method="post">
+	<br>
+	<div id="select">
+		Level: 
+		<input type="radio" name="level" id="level1" value="1">1</input>
+		<input type="radio" name="level" id="level2" value="2">2</input>
+	</div>
+	<input type="submit" id="startbutton" value="Start!" onclick="javascript:hiding()"></input>
+</form>
+
+<highScore id="highscore">High Score:</highScore>
+<script>
+	if (localStorage.getItem("highscore") == null){
+		document.write("0");
+	} else{
+		document.write(localStorage.getItem("highscore"));
+	}
+</script>
+</div>
+<div id="canvas">
+<canvas id="gameBoard" width="400px" height="640px" style="border:1px solid black"></canvas>
+</div>
 </body>

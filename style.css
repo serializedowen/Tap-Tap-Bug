@@ -10,6 +10,9 @@ h1 {
 	padding: 10px;
 	border-color: blue;
 }
+#canvas{
+	visibility: hidden;
+}
 #select {
 	font-weight: bold;
 	font-size: 24px;

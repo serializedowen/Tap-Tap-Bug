@@ -105,7 +105,7 @@ function doMouseDown(event){
 	}
 }
 
-function init() {
+function init(levels) {
 	backgroundMusic.play();
 	var canvas = document.getElementById("gameBoard");
 	var ctx = canvas.getContext("2d");
@@ -117,7 +117,7 @@ function init() {
 	}
 	//alert("level" + window.location.href.substr(index + 1, 1));
 
-	level = window.location.href.substr(index + 1, 1);
+	level = levels;
 	bugDrawingLoop();
 	requestID = requestAnimationFrame(mainLoop);
 }
@@ -132,7 +132,6 @@ function switchStateSpawningLoop(){
 
 function drawScoreBoard(ctx){
 	ctx.clearRect(0, 0, 400, scoreBoardHeight);
-
 	ctx.save();
 	ctx.strokeStyle = "black";
 	ctx.fillStyle = "black";
@@ -146,12 +145,11 @@ function drawScoreBoard(ctx){
 	ctx.fillText("Score: " + score + " Points", 280, scoreBoardHeight / 2 + 5);
 	ctx.strokeStyle = "black";
 	ctx.strokeRect(185, scoreBoardHeight/2 - 15, 30, 30);
+	ctx.restore();
 	if (paused){
-		console.log("here");
 		ctx.save();
 		ctx.strokeStyle = "black";
 		ctx.fillStyle = "black";
-	
 		ctx.beginPath();
 		ctx.moveTo(189, scoreBoardHeight/2 - 11);
 		ctx.lineTo(211, scoreBoardHeight/2);
@@ -161,9 +159,7 @@ function drawScoreBoard(ctx){
 		ctx.stroke();
 		ctx.fill();
 		ctx.restore();
-
 	} else{
-		console.log("alsohere");
 		ctx.save();
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = 6;
@@ -175,9 +171,8 @@ function drawScoreBoard(ctx){
 		ctx.closePath();
 		ctx.stroke();
 		ctx.restore();
-
+		}
 	}
-}
 
 function mainLoop(){
 	var canvas = document.getElementById("gameBoard");
