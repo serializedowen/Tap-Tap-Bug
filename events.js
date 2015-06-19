@@ -10,19 +10,12 @@ var paused = false;
 var gameEnded = false;
 var clickX;
 var clickY;
-var pauseDelay = 100;
 var background = new Image();
 background.src = "grass.png";
 var foods = new Image();
 foods.src = "foods.png";
 var splat = new Audio("Splatsound.wav");
 var backgroundMusic = new Audio("Spring_In_My_Step_-_Silent_Partner.wav");
-//var blackBugs = new Image();
-//var redBugs = new Image();
-//var OrangeBugs = new Image();
-//blackBugs.src = "blackbug.png";
-//redBugs.src = "redbug.png";
-//OrangeBugs.src = "OrangeBug.png";
 var redX = new Image();
 redX.src = "red_X.png";
 var bloodSplat = new Image();
@@ -72,7 +65,7 @@ function doMouseDown(event){
 
 	// Controls for game screen
 	if (gameEnded == false){
-		//console.log(clickX + " " + clickY + paused);
+
 		if ((215 > clickX) && (185 < clickX) && (scoreBoardHeight/2 + 15 > clickY) && (clickY > scoreBoardHeight/2 - 15)){
 			paused = !paused;
 			var canvas = document.getElementById("gameBoard");
@@ -115,7 +108,6 @@ function init() {
 	for (var i = 0; i < numOfFood; i++){
 		foodArray.push(makeNewFood(ctx));
 	}
-	//alert("level" + window.location.href.substr(index + 1, 1));
 
 	level = window.location.href.substr(index + 1, 1);
 	bugDrawingLoop();
@@ -149,11 +141,9 @@ function drawScoreBoard(ctx){
 	ctx.restore();
 
 	if (paused){
-		console.log("here");
 		ctx.save();
 		ctx.strokeStyle = "black";
 		ctx.fillStyle = "black";
-	
 		ctx.beginPath();
 		ctx.moveTo(189, scoreBoardHeight/2 - 11);
 		ctx.lineTo(211, scoreBoardHeight/2);
@@ -165,7 +155,6 @@ function drawScoreBoard(ctx){
 		ctx.restore();
 
 	} else{
-		console.log("alsohere");
 		ctx.save();
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = 6;
@@ -177,7 +166,6 @@ function drawScoreBoard(ctx){
 		ctx.closePath();
 		ctx.stroke();
 		ctx.restore();
-
 	}
 }
 
@@ -227,7 +215,6 @@ function mainLoop(){
 	} 
 	drawScoreBoard(ctx);
 	requestID = requestAnimationFrame(mainLoop);
-
 }
 
 function bugDrawingLoop(){
@@ -238,7 +225,6 @@ function bugDrawingLoop(){
 			bugDrawingLoop();
 		}, rand);
 }
-
 
 var blackBug = {
 	color: "rgba(0, 0, 0, ",
@@ -264,9 +250,6 @@ var orangeBug = {
 	probability: 0.4
 };
 
-
-
-
 function makeNewFood(ctx){
 	var valid = false;
 	var pictureX = 5 + (Math.floor(Math.random() * 5) * 25);
@@ -285,8 +268,6 @@ function makeNewFood(ctx){
 		}
 	}
 
-	//console.log("x: " + x + "y: " + y);
-	//console.log(pictureX);
 	function draw(ctx){
 		var food = document.getElementById("food");
 		ctx.drawImage(foods, pictureX, pictureY, 20, 20,x,y,20,20);
@@ -371,7 +352,7 @@ function makeNewBug(ctx){
 		ctx.beginPath();
 		ctx.arc(xhead, yhead, 5, 0, 2 * Math.PI);
 		ctx.closePath();
-		//console.log(parseFillStyle());
+		
 		ctx.fillStyle = parseFillStyle();
 		ctx.fill();
 		ctx.strokeStyle = "black";
