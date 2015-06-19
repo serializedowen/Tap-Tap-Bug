@@ -1,6 +1,6 @@
 var foodArray = [];
 var bugArray = [];
-var numOfFood = 10;
+var numOfFood = 5;
 var scoreBoardHeight = 40;
 var timeLeft = 60;
 var score = 0;
@@ -386,26 +386,10 @@ function makeNewBug(ctx){
 
 		
 	}
-	//function draw(context){
-	//	context.save();	
-	//	context.translate(info.x,info.y);
-	//	context.rotate(info.target.angle);
-	//	context.fillStyle = 'black';
-	//	if(info.type.color == "black"){
-	//		context.drawImage(blackBugs,0,0);
-	//	}
-	//	else if(info.type.color == "orange"){
-	//		context.drawImage(OrangeBugs,0,0);
-	//	}
-	//	else{
-	//		context.drawImage(redBugs,0,0);
-	//	}
-	//	context.restore();
-	//}
+
 	function evaluate(){
 		return (info.x > info.target.x - 10) && (info.x < info.target.x + 10) && (info.y > info.target.y - 10) && (info.y < info.target.y + 10);
 	}
-
 
 	//return true or false, indicating whether the bug is killed.
 	function update(elapsed){
