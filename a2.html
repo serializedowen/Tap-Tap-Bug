@@ -3,36 +3,9 @@
 <head>
 <script type="text/javascript "src= "events.js"></script>
 <link href="style.css" type="text/css" rel="stylesheet" />
-<script>
-var level;
-
-function checkLevel()
-{
-	var radio = document.getElementsByName("level");
-	for (var i = 0; i < radio.length; i++){
-		if (radio[i].checked){
-			level = radio[i].value;
-			return true;
-		}
-	}
-	alert("you must select a level to continue.");
-	return false;
-}
-
-
-function redirectPage(){
-	init(level);
-}
-
-function hiding(){
-		document.getElementById("hid").style.visibility = 'hidden';
-		document.getElementById("canvas").style.visibility = 'visible';
-}
-</script>
-
 </head>
 <div id="hid">
-<body>
+<body onload="writeHighScore()">
 <br>
 <br>
 <br>
@@ -49,13 +22,6 @@ function hiding(){
 </form>
 
 <highScore id="highscore">High Score:</highScore>
-<script>
-	if (localStorage.getItem("highscore") == null){
-		document.write("0");
-	} else{
-		document.write(localStorage.getItem("highscore"));
-	}
-</script>
 </div>
 <div id="canvas">
 <canvas id="gameBoard" width="400px" height="640px" style="border:1px solid black"></canvas>
