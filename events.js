@@ -9,6 +9,7 @@ var spawnID;
 var paused = false;
 var gameEnded = false;
 var clickX;
+var level;
 var clickY;
 var pauseDelay = 100;
 var background = new Image();
@@ -17,17 +18,33 @@ var foods = new Image();
 foods.src = "foods.png";
 var splat = new Audio("Splatsound.wav");
 var backgroundMusic = new Audio("Spring_In_My_Step_-_Silent_Partner.wav");
-//var blackBugs = new Image();
-//var redBugs = new Image();
-//var OrangeBugs = new Image();
-//blackBugs.src = "blackbug.png";
-//redBugs.src = "redbug.png";
-//OrangeBugs.src = "OrangeBug.png";
 var redX = new Image();
 redX.src = "red_X.png";
 var bloodSplat = new Image();
 bloodSplat.src = "blood-splat-icon.png";
+var blackBug = {
+	color: "rgba(0, 0, 0, ",
+	speed1: 0.15,
+	speed2: 0.2,
+	score: 5,
+	probability: 0.3
+};
 
+var redBug = {
+	color: "rgba(255, 0, 0, ",
+	speed1: 0.075,
+	speed2: 0.1,
+	score: 3,
+	probability: 0.3
+};
+
+var orangeBug = {
+	color: "rgba(255, 102, 0, ",
+	speed1: 0.06,
+	speed2: 0.08,
+	score: 1,
+	probability: 0.4
+};
 
 // Known Issues:
 
@@ -36,6 +53,30 @@ bloodSplat.src = "blood-splat-icon.png";
 	//3. Pausing the game doesn't stop the bug spawning loop.   RESOLVED
 	//4. speed differene from level not implemented.   RESOLVED
 	//5. Bugs wont fade out when killed RESOLVED
+
+
+function checkLevel()
+{
+	var radio = document.getElementsByName("level");
+	for (var i = 0; i < radio.length; i++){
+		if (radio[i].checked){
+			level = radio[i].value;
+			return true;
+		}
+	}
+	alert("you must select a level to continue.");
+	return false;
+}
+
+
+function redirectPage(){
+	init(level);
+}
+
+function hiding(){
+		document.getElementById("hid").style.visibility = 'hidden';
+		document.getElementById("canvas").style.visibility = 'visible';
+}
 
 
 window.addEventListener("mousedown", doMouseDown, false);
@@ -72,7 +113,8 @@ function doMouseDown(event){
 
 	// Controls for game screen
 	if (gameEnded == false){
-		//console.log(clickX + " " + clickY + paused);
+
+
 		if ((215 > clickX) && (185 < clickX) && (scoreBoardHeight/2 + 15 > clickY) && (clickY > scoreBoardHeight/2 - 15)){
 			paused = !paused;
 			var canvas = document.getElementById("gameBoard");
@@ -108,6 +150,14 @@ function doMouseDown(event){
 			rehid();
 		}
 		
+	}
+}
+
+function writeHighScore(){
+	if (localStorage.getItem("highscore") == null){
+		document.getElementById("highscore").innerHTML = "High Score: 0";
+	} else{
+		document.getElementById("highscore").innerHTML = "High Score: " + localStorage.getItem("highscore");
 	}
 }
 
@@ -249,34 +299,6 @@ function bugDrawingLoop(){
 			bugDrawingLoop();
 		}, rand);
 }
-
-
-var blackBug = {
-	color: "rgba(0, 0, 0, ",
-	speed1: 0.15,
-	speed2: 0.2,
-	score: 5,
-	probability: 0.3
-};
-
-var redBug = {
-	color: "rgba(255, 0, 0, ",
-	speed1: 0.075,
-	speed2: 0.1,
-	score: 3,
-	probability: 0.3
-};
-
-var orangeBug = {
-	color: "rgba(255, 102, 0, ",
-	speed1: 0.06,
-	speed2: 0.08,
-	score: 1,
-	probability: 0.4
-};
-
-
-
 
 function makeNewFood(ctx){
 	var valid = false;

@@ -3,6 +3,7 @@
 <head>
 <script type="text/javascript "src= "events.js"></script>
 <link href="style.css" type="text/css" rel="stylesheet" />
+
 <script>
 var level;
 
@@ -36,7 +37,7 @@ function rehid(){
 
 </head>
 <div id="hid">
-<body>
+<body onload="writeHighScore()">
 <br>
 <br>
 <br>
@@ -53,13 +54,6 @@ function rehid(){
 </form>
 
 <highScore id="highscore">High Score:</highScore>
-<script>
-	if (localStorage.getItem("highscore") == null){
-		document.write("0");
-	} else{
-		document.write(localStorage.getItem("highscore"));
-	}
-</script>
 </div>
 <div id="canvas">
 <canvas id="gameBoard" width="400px" height="640px" style="border:1px solid black"></canvas>
