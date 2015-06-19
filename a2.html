@@ -1,40 +1,7 @@
 <DOCTYPE html>
-
 <head>
 <script type="text/javascript "src= "events.js"></script>
 <link href="style.css" type="text/css" rel="stylesheet" />
-
-<script>
-var level;
-
-function checkLevel()
-{
-	var radio = document.getElementsByName("level");
-	for (var i = 0; i < radio.length; i++){
-		if (radio[i].checked){
-			level = radio[i].value;
-			return true;
-		}
-	}
-	alert("you must select a level to continue.");
-	return false;
-}
-
-
-function redirectPage(){
-	init(level);
-}
-
-function hiding(){
-		document.getElementById("hid").style.visibility = 'hidden';
-		document.getElementById("canvas").style.visibility = 'visible';
-}
-function rehid(){
-	document.getElementById("hid").style.visibility = 'visible';
-	document.getElementById("canvas").style.visibility = 'hidden';
-}
-</script>
-
 </head>
 <div id="hid">
 <body onload="writeHighScore()">
@@ -42,7 +9,6 @@ function rehid(){
 <br>
 <br>
 <h1> Tap Tap Bug</h1>
-
 <form name="levelform" action="javascript:redirectPage()" onsubmit="return checkLevel()" method="post">
 	<br>
 	<div id="select">
@@ -52,7 +18,6 @@ function rehid(){
 	</div>
 	<input type="submit" id="startbutton" value="Start!" onclick="javascript:hiding()"></input>
 </form>
-
 <highScore id="highscore">High Score:</highScore>
 </div>
 <div id="canvas">

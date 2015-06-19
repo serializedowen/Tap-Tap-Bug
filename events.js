@@ -1,6 +1,6 @@
 var foodArray = [];
 var bugArray = [];
-var numOfFood = 10;
+var numOfFood = 5;
 var scoreBoardHeight = 40;
 var timeLeft = 60;
 var score = 0;
@@ -68,16 +68,19 @@ function checkLevel()
 	return false;
 }
 
-
 function redirectPage(){
 	init(level);
+}
+
+function rehid(){
+	document.getElementById("hid").style.visibility = 'visible';
+	document.getElementById("canvas").style.visibility = 'hidden';
 }
 
 function hiding(){
 		document.getElementById("hid").style.visibility = 'hidden';
 		document.getElementById("canvas").style.visibility = 'visible';
 }
-
 
 window.addEventListener("mousedown", doMouseDown, false);
 
@@ -87,7 +90,6 @@ function gameOver(){
 	gameEnded = true;
 	paused = true;
 	
-
 	clearTimeout(spawnID);
 	cancelAnimationFrame(mainLoop);
 
@@ -113,7 +115,6 @@ function doMouseDown(event){
 
 	// Controls for game screen
 	if (gameEnded == false){
-
 
 		if ((215 > clickX) && (185 < clickX) && (scoreBoardHeight/2 + 15 > clickY) && (clickY > scoreBoardHeight/2 - 15)){
 			paused = !paused;
@@ -154,8 +155,7 @@ function doMouseDown(event){
 			paused = false;
 			gameEnded = false;
 			rehid();
-		}
-		
+		}	
 	}
 }
 
@@ -255,7 +255,6 @@ function mainLoop(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.drawImage(background,0,40);
 
-
 	if (foodArray.length == 0){
 		gameOver();
 		return;
@@ -272,10 +271,8 @@ function mainLoop(){
 
 		if (!bugArray[i].update(1000/60)){
 			bugsToRemove.push(i);
-		}
-		
+		}	
 	}
-
 
 	//resets the click point value.
 	clickX = 0;
@@ -291,10 +288,10 @@ function mainLoop(){
 		timeLeft = 0;
 		gameOver();
 		return;
-	} 
+	}
+
 	drawScoreBoard(ctx);
 	requestID = requestAnimationFrame(mainLoop);
-
 }
 
 function bugDrawingLoop(){
@@ -444,26 +441,10 @@ function makeNewBug(ctx){
 
 		
 	}
-	//function draw(context){
-	//	context.save();	
-	//	context.translate(info.x,info.y);
-	//	context.rotate(info.target.angle);
-	//	context.fillStyle = 'black';
-	//	if(info.type.color == "black"){
-	//		context.drawImage(blackBugs,0,0);
-	//	}
-	//	else if(info.type.color == "orange"){
-	//		context.drawImage(OrangeBugs,0,0);
-	//	}
-	//	else{
-	//		context.drawImage(redBugs,0,0);
-	//	}
-	//	context.restore();
-	//}
+
 	function evaluate(){
 		return (info.x > info.target.x - 10) && (info.x < info.target.x + 10) && (info.y > info.target.y - 10) && (info.y < info.target.y + 10);
 	}
-
 
 	//return true or false, indicating whether the bug is killed.
 	function update(elapsed){
@@ -498,11 +479,9 @@ function makeNewBug(ctx){
 			if (evaluate()){
 				foodArray.splice(info.target.index, 1);
 			} 
-
 			return true;
 		}
 	}
-
 	return {draw: draw, update: update, info:info};
 }
 
