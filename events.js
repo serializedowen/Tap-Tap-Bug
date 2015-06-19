@@ -99,6 +99,12 @@ function doMouseDown(event){
 
 		//Clicking Exit Button.
 		} else if ((clickX > 250) && (clickX < 300) && (clickY > 350) && (clickY < 380)){
+			foodArray = [];
+			bugArray = [];
+			timeLeft = 60;
+			score = 0;
+			paused = false;
+			gameEnded = false;
 			rehid();
 		}
 		
