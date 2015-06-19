@@ -137,6 +137,12 @@ function doMouseDown(event){
 
 		//Clicking Replay Button.
 		if ((clickX > 100) && (clickX < 150) && (clickY > 350) && (clickY < 380)){
+			foodArray = [];
+			bugArray = [];
+			timeLeft = 60;
+			score = 0;
+			paused = false;
+			gameEnded = false;
 			restart();
 
 		//Clicking Exit Button.
