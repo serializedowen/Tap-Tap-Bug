@@ -55,8 +55,7 @@ var orangeBug = {
 	//5. Bugs wont fade out when killed RESOLVED
 
 
-function checkLevel()
-{
+function checkLevel(){
 	var radio = document.getElementsByName("level");
 	for (var i = 0; i < radio.length; i++){
 		if (radio[i].checked){
@@ -69,6 +68,7 @@ function checkLevel()
 }
 
 function redirectPage(){
+	hiding();
 	init(level);
 }
 
@@ -172,7 +172,7 @@ function init(levels) {
 	var canvas = document.getElementById("gameBoard");
 	var ctx = canvas.getContext("2d");
 	
-	index = window.location.href.lastIndexOf("=");
+	console.log("init");
 
 	for (var i = 0; i < numOfFood; i++){
 		foodArray.push(makeNewFood(ctx));
@@ -312,7 +312,7 @@ function makeNewFood(ctx){
 	while(valid == false){
 		valid = true;
 		var x = Math.random() * 360 + 20;
-		var y = Math.random() * 500 + 100 + scoreBoardHeight;
+		var y = Math.random() * 300 + 300 + scoreBoardHeight;
 		
 		for (var i = 0; i < foodArray.length; i++){
 			if ((x + 50 > foodArray[i].x) && (foodArray[i].x > x - 50) && (y + 50 > foodArray[i].y) && (foodArray[i].y > y - 50)){
@@ -463,6 +463,10 @@ function makeNewBug(ctx){
 
 			var distance = speed * elapsed;
 			
+			if(foodArray.length == 0){
+				return true;
+			}
+
 			// If bug is clicked.
 			if ((clickX > info.x - 30) && (clickX < info.x + 30) && (clickY > info.y - 30) && (clickY < info.y + 30)){
 				info.transparency -= 1/120;
