@@ -1,3 +1,6 @@
+import { orangeBug, blackBug, redBug, bugConfig } from "./bugs";
+import { redX, background, splat, bloodSplat, foods } from "./images";
+
 var foodArray = [];
 var bugArray = [];
 
@@ -12,22 +15,13 @@ var gameEnded = false;
 var clickX;
 var clickY;
 var pauseDelay = 100;
-var background = new Image();
-background.src = "grass.png";
-var foods = new Image();
-foods.src = "foods.png";
-var splat = new Audio("Splatsound.wav");
+
 // var backgroundMusic = new Audio("Spring_In_My_Step_-_Silent_Partner.wav");
-//var blackBugs = new Image();
-//var redBugs = new Image();
-//var OrangeBugs = new Image();
-//blackBugs.src = "blackbug.png";
-//redBugs.src = "redbug.png";
-//OrangeBugs.src = "OrangeBug.png";
-var redX = new Image();
-redX.src = "red_X.png";
-var bloodSplat = new Image();
-bloodSplat.src = "blood-splat-icon.png";
+
+let level;
+const canvas: HTMLCanvasElement = document.getElementById(
+  "gameBoard"
+) as HTMLCanvasElement;
 
 // Known Issues:
 
@@ -38,15 +32,15 @@ bloodSplat.src = "blood-splat-icon.png";
 //5. Bugs wont fade out when killed RESOLVED
 
 window.addEventListener("mousedown", doMouseDown, false);
+window.addEventListener("load", init);
 
 function gameOver() {
-  var canvas = document.getElementById("gameBoard");
   var ctx = canvas.getContext("2d");
   gameEnded = true;
   paused = true;
 
   clearTimeout(spawnID);
-  cancelAnimationFrame(mainLoop);
+  cancelAnimationFrame(requestID);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "red";
@@ -59,12 +53,9 @@ function gameOver() {
   ctx.fillStyle = "black";
   ctx.fillText("Replay", 100, 370);
   ctx.fillText("Exit", 260, 370);
-  if (
-    localStorage.getItem("highscore") == null ||
-    localStorage.getItem("highscore") < score
-  ) {
-    localStorage.setItem("highscore", score);
-  }
+
+  const highScore = Number(localStorage.getItem("highscore")) || 0;
+  localStorage.setItem("highscore", Math.max(highScore, score).toString());
 }
 
 function doMouseDown(event) {
@@ -80,7 +71,6 @@ function doMouseDown(event) {
       clickY > scoreBoardHeight / 2 - 15
     ) {
       paused = !paused;
-      var canvas = document.getElementById("gameBoard");
       var ctx = canvas.getContext("2d");
 
       drawScoreBoard(ctx);
@@ -103,24 +93,27 @@ function doMouseDown(event) {
 
       //Clicking Exit Button.
     } else if (clickX > 250 && clickX < 300 && clickY > 350 && clickY < 380) {
-      window.location = "start.html";
+      window.location.href = "start.html";
     }
   }
 }
 
-function init() {
+export default function init() {
+  console.log("object");
   // backgroundMusic.play();
-  var canvas = document.getElementById("gameBoard");
+  const canvas: HTMLCanvasElement = document.getElementById(
+    "gameBoard"
+  ) as HTMLCanvasElement;
   var ctx = canvas.getContext("2d");
 
-  index = window.location.href.lastIndexOf("=");
-
   for (var i = 0; i < numOfFood; i++) {
-    foodArray.push(makeNewFood(ctx));
+    foodArray.push(makeNewFood());
   }
-  //alert("level" + window.location.href.substr(index + 1, 1));
 
-  level = window.location.href.substr(index + 1, 1);
+  level = window.location.href.substr(
+    window.location.href.lastIndexOf("=") + 1,
+    1
+  );
   bugDrawingLoop();
   requestID = requestAnimationFrame(mainLoop);
 }
@@ -187,8 +180,7 @@ function drawScoreBoard(ctx) {
 }
 
 function mainLoop() {
-  var canvas = document.getElementById("gameBoard");
-  ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.drawImage(background, 0, 40);
@@ -235,37 +227,13 @@ function mainLoop() {
 function bugDrawingLoop() {
   var rand = Math.random() * 2000 + 1000; //1-3 seconds
 
-  spawnID = setTimeout(function () {
-    bugArray.push(makeNewBug(ctx));
+  spawnID = setTimeout(() => {
+    bugArray.push(makeNewBug());
     bugDrawingLoop();
   }, rand);
 }
 
-var blackBug = {
-  color: "rgba(0, 0, 0, ",
-  speed1: 0.15,
-  speed2: 0.2,
-  score: 5,
-  probability: 0.3,
-};
-
-var redBug = {
-  color: "rgba(255, 0, 0, ",
-  speed1: 0.075,
-  speed2: 0.1,
-  score: 3,
-  probability: 0.3,
-};
-
-var orangeBug = {
-  color: "rgba(255, 102, 0, ",
-  speed1: 0.06,
-  speed2: 0.08,
-  score: 1,
-  probability: 0.4,
-};
-
-function makeNewFood(ctx) {
+function makeNewFood() {
   var valid = false;
   var pictureX = 5 + Math.floor(Math.random() * 5) * 25;
   var pictureY = 10 + Math.floor(Math.random() * 2) * 20;
@@ -302,19 +270,20 @@ function makeNewFood(ctx) {
   return { draw: draw, update: update, x: x, y: y };
 }
 
-function makeNewBug(ctx) {
-  var type = Math.random();
+function makeNewBug() {
   var flag = 0;
-  if (type < 0.3) {
+  let type: bugConfig;
+  const rand = Math.random();
+  if (rand < 0.3) {
     type = blackBug;
-  } else if (type < 0.6) {
+  } else if (rand < 0.6) {
     type = redBug;
   } else {
     type = orangeBug;
   }
 
   //info object.
-  var info = {
+  const info = {
     x: 10 + Math.random() * 380,
     y: 30 + scoreBoardHeight,
     type: type,
@@ -412,22 +381,7 @@ function makeNewBug(ctx) {
       ctx.restore();
     }
   }
-  //function draw(context){
-  //	context.save();
-  //	context.translate(info.x,info.y);
-  //	context.rotate(info.target.angle);
-  //	context.fillStyle = 'black';
-  //	if(info.type.color == "black"){
-  //		context.drawImage(blackBugs,0,0);
-  //	}
-  //	else if(info.type.color == "orange"){
-  //		context.drawImage(OrangeBugs,0,0);
-  //	}
-  //	else{
-  //		context.drawImage(redBugs,0,0);
-  //	}
-  //	context.restore();
-  //}
+
   function evaluate() {
     return (
       info.x > info.target.x - 10 &&
@@ -483,5 +437,5 @@ function makeNewBug(ctx) {
 }
 
 function findAngle(x1, y1, x2, y2) {
-  return (theta = Math.atan2(y2 - y1, x2 - x1));
+  return Math.atan2(y2 - y1, x2 - x1);
 }

@@ -1,0 +1,72 @@
+<DOCTYPE html />
+<head>
+  <style>
+    body {
+      text-align: center;
+    }
+    h1 {
+      color: red;
+      font-size: 50px;
+      border-width: 2px;
+      border-style: dotted;
+      display: inline;
+      padding: 10px;
+      border-color: blue;
+    }
+    #select {
+      font-weight: bold;
+      font-size: 24px;
+    }
+  </style>
+
+  <script>
+    var level;
+
+    function checkLevel() {
+      var radio = document.getElementsByName("level");
+      for (var i = 0; i < radio.length; i++) {
+        if (radio[i].checked) {
+          level = radio[i].value;
+          return true;
+        }
+      }
+      alert("you must select a level to continue.");
+      return false;
+    }
+
+    function redirectPage() {
+      window.location = "game.html" + "?" + "level=" + level;
+    }
+  </script>
+</head>
+
+<body>
+  <br />
+  <br />
+  <br />
+  <h1>Tap Tap Bug</h1>
+
+  <form
+    name="levelform"
+    action="javascript:redirectPage()"
+    onsubmit="return checkLevel()"
+    method="post"
+  >
+    <br />
+    <div id="select">
+      Level:
+      <input type="radio" name="level" id="level1" value="1" />
+      <input type="radio" name="level" id="level2" value="2" />
+    </div>
+    <input type="submit" id="startbutton" value="Start!" />
+  </form>
+
+  <highScore id="highscore">High Score:</highScore>
+  <script>
+    if (localStorage.getItem("highscore") == null) {
+      document.write("0");
+    } else {
+      document.write(localStorage.getItem("highscore"));
+    }
+  </script>
+</body>
